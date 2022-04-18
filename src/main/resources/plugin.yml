@@ -1,0 +1,7 @@
+name: Lobby
+description: "Lobby plugin"
+version: @version@
+authors:
+  - Azodox_
+main: fr.olten.xmas.Lobby
+api-version: 1.18
