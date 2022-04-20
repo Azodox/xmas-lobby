@@ -5,3 +5,4 @@ authors:
   - Azodox_
 main: fr.olten.xmas.Lobby
 api-version: 1.18
+load: POSTWORLD
