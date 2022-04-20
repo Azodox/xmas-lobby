@@ -30,8 +30,9 @@ public class TeamNameTagManager {
         }
 
         var team = SCOREBOARD.registerNewTeam(teamName);
-        team.prefix(Component.text(rank.getPrefix()));
-        team.setColor(rank.getColor());
+        team.prefix(rank.getPrefix());
+        team.suffix(rank.getSuffix());
+        team.color(rank.getColor());
         team.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.ALWAYS);
     }
 
