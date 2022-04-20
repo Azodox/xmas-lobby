@@ -5,7 +5,6 @@ import fr.olten.xmas.carousel.Engine;
 import fr.olten.xmas.listener.ProtectionListener;
 import fr.olten.xmas.listener.horse.HorseDismountListener;
 import fr.olten.xmas.listener.horse.HorseMountListener;
-import fr.olten.xmas.listener.horse.PreventHorseDespawn;
 import fr.olten.xmas.listener.rank.RankChangedListener;
 import fr.olten.xmas.listener.sign.SignBreakListener;
 import fr.olten.xmas.listener.sign.SignInteractListener;
@@ -40,7 +39,6 @@ public class Lobby extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerJoinListener(this), this);
         getServer().getPluginManager().registerEvents(new PlayerQuitListener(this), this);
         getServer().getPluginManager().registerEvents(new HorseMountListener(this), this);
-        getServer().getPluginManager().registerEvents(new PreventHorseDespawn(this), this);
         getServer().getPluginManager().registerEvents(new HorseGotDamagedListener(this), this);
         getServer().getPluginManager().registerEvents(new HorseDismountListener(this), this);
         getServer().getPluginManager().registerEvents(new SignInteractListener(this), this);

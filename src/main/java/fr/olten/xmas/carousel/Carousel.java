@@ -89,6 +89,8 @@ public class Carousel {
             this.armorStands.add(car);
             this.horseSeats.put(horse.getUniqueId(), car);
             this.horses.add(horse);
+            var chunkAt = carLoc.getWorld().getChunkAt(carLoc);
+            carLoc.getWorld().setChunkForceLoaded(chunkAt.getX(), chunkAt.getZ(), true);
         }
     }
     public void despawn() {
