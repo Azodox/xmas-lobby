@@ -3,6 +3,7 @@ description: "Lobby plugin"
 version: @version@
 authors:
   - Azodox_
+  - Virtuaal_
 main: fr.olten.xmas.Lobby
 api-version: 1.18
 load: POSTWORLD
