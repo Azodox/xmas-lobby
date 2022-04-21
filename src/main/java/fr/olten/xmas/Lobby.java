@@ -1,16 +1,17 @@
 package fr.olten.xmas;
 
+import fr.olten.xmas.achievement.Achievement;
 import fr.olten.xmas.carousel.Carousel;
 import fr.olten.xmas.carousel.Engine;
+import fr.olten.xmas.listener.PlayerJoinListener;
+import fr.olten.xmas.listener.PlayerQuitListener;
 import fr.olten.xmas.listener.ProtectionListener;
 import fr.olten.xmas.listener.horse.HorseDismountListener;
+import fr.olten.xmas.listener.horse.HorseGotDamagedListener;
 import fr.olten.xmas.listener.horse.HorseMountListener;
 import fr.olten.xmas.listener.rank.RankChangedListener;
 import fr.olten.xmas.listener.sign.SignBreakListener;
 import fr.olten.xmas.listener.sign.SignInteractListener;
-import fr.olten.xmas.listener.horse.HorseGotDamagedListener;
-import fr.olten.xmas.listener.PlayerJoinListener;
-import fr.olten.xmas.listener.PlayerQuitListener;
 import fr.olten.xmas.manager.TeamNameTagManager;
 import net.valneas.account.rank.RankUnit;
 import org.bukkit.Bukkit;
@@ -19,9 +20,12 @@ import org.bukkit.block.Sign;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Lobby extends JavaPlugin {
 
+    private final Set<Achievement> achievements = new HashSet<>();
     private Carousel carousel;
 
     @Override
@@ -35,6 +39,8 @@ public class Lobby extends JavaPlugin {
 
         Arrays.stream(RankUnit.values()).forEach(TeamNameTagManager::init);
         getServer().getOnlinePlayers().forEach(TeamNameTagManager::update);
+
+        this.registerAchievements();
 
         getServer().getPluginManager().registerEvents(new PlayerJoinListener(this), this);
         getServer().getPluginManager().registerEvents(new PlayerQuitListener(this), this);
@@ -53,6 +59,10 @@ public class Lobby extends JavaPlugin {
         TeamNameTagManager.reset();
         carousel.despawn();
         getLogger().info("Disabled!");
+    }
+
+    private void registerAchievements() {
+        this.achievements.forEach(achievement -> this.getServer().getPluginManager().registerEvents(achievement, this));
     }
 
     public Carousel getCarousel() {
