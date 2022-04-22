@@ -2,13 +2,13 @@ package fr.olten.xmas.roulette;
 
 import fr.olten.xmas.Lobby;
 import fr.olten.xmas.carousel.CarouselPlayerManager;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.plugin.Plugin;
 
 import java.util.*;
@@ -168,6 +168,8 @@ public class Roulette {
             block.setType(Material.YELLOW_WOOL);
         });
 
+        spawnFireworks(startSign.getLocation().add(0, 5, 0),2);
+
         Bukkit.getLogger().info("Stopped roulette at position: " + currentBlockPosition);
 
         currentlyTurningRoulette.playSound(currentlyTurningRoulette, Sound.BLOCK_NOTE_BLOCK_PLING, (float) 0.5, (float) 9);
@@ -179,6 +181,23 @@ public class Roulette {
 
     public void reward(){
 
+    }
+
+    public static void spawnFireworks(Location location, int amount){
+        Location loc = location;
+        Firework fw = (Firework) loc.getWorld().spawnEntity(loc, EntityType.FIREWORK);
+        FireworkMeta fwm = fw.getFireworkMeta();
+
+        fwm.setPower(2);
+        fwm.addEffect(FireworkEffect.builder().withColor(Color.LIME).flicker(true).build());
+
+        fw.setFireworkMeta(fwm);
+        fw.detonate();
+
+        for(int i = 0;i<amount; i++){
+            Firework fw2 = (Firework) loc.getWorld().spawnEntity(loc, EntityType.FIREWORK);
+            fw2.setFireworkMeta(fwm);
+        }
     }
 
 }
