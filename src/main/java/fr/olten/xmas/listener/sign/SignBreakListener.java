@@ -19,6 +19,10 @@ public class SignBreakListener implements Listener {
             if(sign.getLocation().equals(lobby.getCarousel().getJoiningSign().getLocation())){
                 event.setCancelled(true);
             }
+
+            if(sign.getLocation().equals(lobby.getRoulette().getStartSign().getLocation())){
+                event.setCancelled(true);
+            }
         }
     }
 }
