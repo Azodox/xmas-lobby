@@ -22,6 +22,11 @@ public class SignInteractListener implements Listener {
                 if(sign.getLocation().equals(lobby.getCarousel().getJoiningSign().getLocation())){
                     lobby.getCarousel().manager().ride(event.getPlayer());
                 }
+
+                if(sign.getLocation().equals(lobby.getRoulette().getStartSign().getLocation())){
+                    lobby.getRoulette().manager().setPlayer(event.getPlayer());
+                    lobby.getRoulette().manager().start();
+                }
             }
         }
     }
