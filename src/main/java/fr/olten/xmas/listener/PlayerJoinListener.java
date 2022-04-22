@@ -2,6 +2,9 @@ package fr.olten.xmas.listener;
 
 import fr.olten.xmas.Lobby;
 import fr.olten.xmas.manager.TeamNameTagManager;
+import net.valneas.account.AccountManager;
+import net.valneas.account.AccountSystem;
+import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -22,6 +25,15 @@ public class PlayerJoinListener implements Listener {
                 lobby.getCarousel().manager().dismount(player);
             }
         }
-        TeamNameTagManager.update(player);
+        var provider = Bukkit.getServicesManager().getRegistration(AccountSystem.class);
+        if(provider != null){
+            var accountSystem = provider.getProvider();
+            var accountManager = new AccountManager(accountSystem, player);
+            if(!accountManager.hasAnAccount()){
+                Bukkit.getScheduler().runTaskLater(lobby, () -> TeamNameTagManager.update(player), 5L);
+            }else{
+                TeamNameTagManager.update(player);
+            }
+        }
     }
 }
