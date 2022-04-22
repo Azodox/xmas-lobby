@@ -13,7 +13,6 @@ import fr.olten.xmas.listener.rank.RankChangedListener;
 import fr.olten.xmas.listener.sign.SignBreakListener;
 import fr.olten.xmas.listener.sign.SignInteractListener;
 import fr.olten.xmas.manager.TeamNameTagManager;
-import fr.olten.xmas.rewards.RewardHandler;
 import fr.olten.xmas.roulette.Roulette;
 import fr.olten.xmas.utils.Mongo;
 import net.valneas.account.rank.RankUnit;
