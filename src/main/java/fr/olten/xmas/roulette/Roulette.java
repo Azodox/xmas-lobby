@@ -2,12 +2,19 @@ package fr.olten.xmas.roulette;
 
 import fr.olten.xmas.Lobby;
 import fr.olten.xmas.carousel.CarouselPlayerManager;
+import fr.olten.xmas.rewards.KeyReward;
+import fr.olten.xmas.rewards.ObjetReward;
+import fr.olten.xmas.rewards.Reward;
+import fr.olten.xmas.rewards.RewardHandler;
+import fr.olten.xmas.roulette.keys.KeyTypes;
+import net.kyori.adventure.text.Component;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.plugin.Plugin;
 
@@ -19,6 +26,7 @@ public class Roulette {
     private int currentBlockPosition, amountOfTurns,slowCount = 0,randomEndNumber;
     private boolean running;
     private Player currentlyTurningRoulette;
+    private KeyTypes currentKeyType;
     private int taskIDStart,taskIDSlow;
 
     private final Lobby lobby;
@@ -29,6 +37,7 @@ public class Roulette {
 
     // Create a roulette with no location predefined.
     public Roulette(Sign startSign, Lobby lobby) {
+        this.currentKeyType = KeyTypes.XMAS_KEY;
         this.lobby = lobby;
         this.startSign = startSign;
         currentBlockPosition = 0;
@@ -39,6 +48,7 @@ public class Roulette {
 
     // Create a roulette with a set of location.
     public Roulette(Sign startSign, List<Location> blockLocations, Lobby lobby) {
+        this.currentKeyType = KeyTypes.XMAS_KEY;
         this.lobby = lobby;
         this.startSign = startSign;
         currentBlockPosition = 0;
@@ -103,10 +113,10 @@ public class Roulette {
 
     public void nextBlockSlow(){
         if(slowCount >= randomEndNumber){
-            // Stop the roulette.
-            stop();
             // Reward the player.
             reward();
+            // Stop the roulette.
+            stop();
             return;
         }
 
@@ -124,7 +134,8 @@ public class Roulette {
     }
 
     // Start the roulette
-    public void start(){
+    public void start(KeyTypes keyType){
+        this.currentKeyType = keyType;
         currentBlockPosition = 0;
         running = true;
 
@@ -180,7 +191,8 @@ public class Roulette {
     }
 
     public void reward(){
-
+        KeyReward reward = new KeyReward(Reward.RewardType.KEYREWARD,currentKeyType);
+        RewardHandler.receiveReward(currentlyTurningRoulette,reward);
     }
 
     public static void spawnFireworks(Location location, int amount){

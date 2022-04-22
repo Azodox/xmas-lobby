@@ -2,6 +2,7 @@ package fr.olten.xmas.listener;
 
 import fr.olten.xmas.Lobby;
 import fr.olten.xmas.manager.TeamNameTagManager;
+import fr.olten.xmas.roulette.keys.KeyDAL;
 import net.valneas.account.AccountManager;
 import net.valneas.account.AccountSystem;
 import org.bukkit.Bukkit;
@@ -20,6 +21,10 @@ public class PlayerJoinListener implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         var player = event.getPlayer();
+
+        KeyDAL keyDAL = new KeyDAL(lobby);
+        keyDAL.initPlayerKeys(player);
+
         if(player.isInsideVehicle()) {
             if(lobby.getCarousel().isRide(player.getVehicle())) {
                 lobby.getCarousel().manager().dismount(player);

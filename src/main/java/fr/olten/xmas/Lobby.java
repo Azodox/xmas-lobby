@@ -14,7 +14,9 @@ import fr.olten.xmas.listener.sign.SignBreakListener;
 import fr.olten.xmas.listener.sign.SignInteractListener;
 import fr.olten.xmas.manager.TeamNameTagManager;
 import fr.olten.xmas.roulette.Roulette;
+import fr.olten.xmas.utils.Mongo;
 import net.valneas.account.rank.RankUnit;
+import net.valneas.account.util.MongoUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Sign;
@@ -30,8 +32,13 @@ public class Lobby extends JavaPlugin {
     private Carousel carousel;
     private Roulette roulette;
 
+    private Mongo mongo;
+
     @Override
     public void onEnable() {
+        this.saveDefaultConfig();
+        this.mongo = new Mongo(this);
+
         var DEFAULT_WORLD = Bukkit.getWorld("world");
         this.carousel = new Carousel(new Location(DEFAULT_WORLD, -483.0, 102.0, -461.0),
                 new Location(DEFAULT_WORLD, -494.0, 100.0, -461, (float) -90.0, (float) 0.0),
@@ -84,4 +91,5 @@ public class Lobby extends JavaPlugin {
     public Roulette getRoulette() {
         return roulette;
     }
+    public Mongo getMongo() { return mongo; }
 }

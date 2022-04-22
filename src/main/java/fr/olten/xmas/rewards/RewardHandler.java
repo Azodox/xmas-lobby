@@ -8,6 +8,8 @@ import net.valneas.account.rank.RankUnit;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.Random;
 import java.util.Set;
 
 
@@ -27,6 +29,7 @@ public class RewardHandler {
             case PERMISSION -> receivePermission(player, ((AccountReward) reward).getString());
             case COMMAND -> executeCommand(player, ((AccountReward) reward).getString());
             case RANK -> receiveRank(player, ((AccountReward) reward).getString());
+            case KEYREWARD -> receiveKeyReward(player, ((KeyReward) reward));
             //case MAJOR_RANK -> main.getRewardHandler().changeMajorRank(player, ((AccountReward) reward).getString());
         }
 
@@ -39,6 +42,26 @@ public class RewardHandler {
         rewards.stream().forEach((reward) -> {
             receiveReward(player, reward);
         });
+    }
+
+    // Receive KeyReward as reward.
+    public static void receiveKeyReward(Player player, KeyReward reward) {
+        Reward r = reward.getRewards().stream().skip(new Random().nextInt(reward.getRewards().size())).findFirst().orElse(null);
+        if(r == null) return;
+
+        switch(r.getType()) {
+            case MONEY -> receiveMoney(player, ((NumericReward) r).getValueModifier());
+            case XP -> receiveXp(player, ((NumericReward) r).getValueModifier());
+            case LEVEL -> receiveLevel(player, ((NumericReward) r).getValueModifier());
+            case ITEM -> receiveItem(player, ((ObjetReward) r).getItem(), (int) ((ObjetReward) r).getValueModifier());
+            case POINTS -> receivePoints(player, ((NumericReward) r).getValueModifier());
+            case PERMISSION -> receivePermission(player, ((AccountReward) r).getString());
+            case COMMAND -> executeCommand(player, ((AccountReward) r).getString());
+            case RANK -> receiveRank(player, ((AccountReward) r).getString());
+        }
+
+        // Call callback in case there is one.
+        r.callback();
     }
 
     // Receive Money as reward.
@@ -140,23 +163,4 @@ public class RewardHandler {
         }
         Bukkit.getLogger().severe("Given rank is null, not rewarded.");
     }
-
-    // Change major rank as reward.
-    /*private void changeMajorRank(Player player, String rank) {
-        if(rank != null) {
-            var provider = Bukkit.getServicesManager().getRegistration(AccountSystem.class);
-            if(provider != null){
-                var accountSystem = provider.getProvider();
-                final AccountManager accountManager = new AccountManager(accountSystem, player);
-                final Rank rankManager = accountManager.newRankManager();
-                if(rankManager.getRanks().contains(RankUnit.getByName(rank))) {
-                    rankManager.setMajorRank(RankUnit.getByName(rank));
-                    return;
-                }
-                Bukkit.getLogger().severe("Given rank is not recognized, not rewarded.");
-            }
-            return;
-        }
-        Bukkit.getLogger().severe("Given rank is null, not rewarded.");
-    }*/
 }
