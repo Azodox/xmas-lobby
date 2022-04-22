@@ -42,7 +42,7 @@ public class Reward implements Cancellable {
     }
 
     public enum RewardType {
-        MONEY,ITEM,XP,LEVEL,POINTS,PERMISSION,COMMAND,RANK
+        MONEY,ITEM,XP,LEVEL,POINTS,PERMISSION,COMMAND,RANK,KEYREWARD
     }
 
 }
