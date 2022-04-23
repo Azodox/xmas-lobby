@@ -1,6 +1,5 @@
 package fr.olten.xmas.manager;
 
-import net.kyori.adventure.text.Component;
 import net.valneas.account.AccountManager;
 import net.valneas.account.AccountSystem;
 import net.valneas.account.rank.RankUnit;
@@ -24,7 +23,7 @@ public class TeamNameTagManager {
      * @param rank The rank to create the team for.
      */
     public static void init(RankUnit rank){
-        var teamName = "1" + rank.getPower();
+        var teamName = Integer.toString(rank.getPower());
         if(SCOREBOARD.getTeam(teamName) != null){
             SCOREBOARD.getTeam(teamName).unregister();
         }
@@ -61,7 +60,7 @@ public class TeamNameTagManager {
      */
     public static void update(AccountManager accountManager){
         var rank = accountManager.newRankManager().getMajorRank();
-        var team = SCOREBOARD.getTeam("1" + rank.getPower());
+        var team = SCOREBOARD.getTeam(String.valueOf(rank.getPower()));
         team.addEntry(accountManager.getName());
     }
 }
