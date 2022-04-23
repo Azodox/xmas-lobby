@@ -12,6 +12,8 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
 
+import java.util.UUID;
+
 public interface Achievement extends Listener {
 
     Component getName();
@@ -19,6 +21,8 @@ public interface Achievement extends Listener {
     Component getDescription();
 
     double getEarnedPoints();
+
+    void complete(UUID uuid);
 
     @EventHandler
     default void onJoin(PlayerJoinEvent event) {
