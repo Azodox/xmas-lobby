@@ -40,5 +40,12 @@ public class PlayerJoinListener implements Listener {
                 TeamNameTagManager.update(player);
             }
         }
+
+        if(!player.hasPlayedBefore()){
+            lobby.getPlayerManager().joiningPlayer(player);
+        }
+
+
+
     }
 }
