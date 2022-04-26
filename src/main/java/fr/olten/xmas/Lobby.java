@@ -12,6 +12,7 @@ import fr.olten.xmas.listener.horse.HorseMountListener;
 import fr.olten.xmas.listener.rank.RankChangedListener;
 import fr.olten.xmas.listener.sign.SignBreakListener;
 import fr.olten.xmas.listener.sign.SignInteractListener;
+import fr.olten.xmas.manager.PlayerManager;
 import fr.olten.xmas.manager.TeamNameTagManager;
 import fr.olten.xmas.roulette.Roulette;
 import fr.olten.xmas.utils.Mongo;
@@ -28,9 +29,9 @@ import java.util.Set;
 public class Lobby extends JavaPlugin {
 
     private final Set<Achievement> achievements = new HashSet<>();
+    private final PlayerManager playerManager = new PlayerManager(this);
     private Carousel carousel;
     private Roulette roulette;
-
     private Mongo mongo;
 
     @Override
@@ -70,6 +71,7 @@ public class Lobby extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new SignBreakListener(this), this);
         getServer().getPluginManager().registerEvents(new RankChangedListener(), this);
         getServer().getPluginManager().registerEvents(new ProtectionListener(), this);
+
         getLogger().info("Enabled!");
     }
 
@@ -91,4 +93,8 @@ public class Lobby extends JavaPlugin {
         return roulette;
     }
     public Mongo getMongo() { return mongo; }
+
+    public PlayerManager getPlayerManager() {
+        return playerManager;
+    }
 }

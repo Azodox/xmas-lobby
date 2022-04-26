@@ -5,3 +5,5 @@ mongodb:
   password: ''
   database: minecraft
   authDatabase: minecraft
+
+spawn: "world:0:0:0:0:0"

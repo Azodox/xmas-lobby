@@ -1,6 +1,6 @@
 package fr.olten.xmas.roulette;
 
-import fr.olten.xmas.carousel.Carousel;
+import fr.olten.xmas.roulette.keys.KeyTypes;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
@@ -50,7 +50,7 @@ public class RoulettePlayerManager {
             Bukkit.getLogger().severe("[Roulette] Can't start roulette because roulette is already running !");
         }
         else{
-            roulette.start();
+            roulette.start(KeyTypes.XMAS_KEY);
             roulette.currentPlayer().sendMessage(Component.text("[Roulette] La roulette a démarré !").color(TextColor.color(0, 255, 0)));
         }
     }
