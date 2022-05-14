@@ -3,9 +3,7 @@ package fr.olten.xmas;
 import fr.olten.xmas.achievement.Achievement;
 import fr.olten.xmas.carousel.Carousel;
 import fr.olten.xmas.carousel.Engine;
-import fr.olten.xmas.listener.PlayerJoinListener;
-import fr.olten.xmas.listener.PlayerQuitListener;
-import fr.olten.xmas.listener.ProtectionListener;
+import fr.olten.xmas.listener.*;
 import fr.olten.xmas.listener.horse.HorseDismountListener;
 import fr.olten.xmas.listener.horse.HorseGotDamagedListener;
 import fr.olten.xmas.listener.horse.HorseMountListener;
@@ -61,6 +59,9 @@ public class Lobby extends JavaPlugin {
         getServer().getOnlinePlayers().forEach(TeamNameTagManager::update);
 
         this.registerAchievements();
+
+        this.getServer().getMessenger().registerIncomingPluginChannel(this, "xmas:lobbysurvie", new IncomingPluginMessageListener(this));
+        this.getServer().getMessenger().registerOutgoingPluginChannel(this, "xmas:lobbysurvie");
 
         getServer().getPluginManager().registerEvents(new PlayerJoinListener(this), this);
         getServer().getPluginManager().registerEvents(new PlayerQuitListener(this), this);

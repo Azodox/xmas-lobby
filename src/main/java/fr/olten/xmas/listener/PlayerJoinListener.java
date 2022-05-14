@@ -41,11 +41,6 @@ public class PlayerJoinListener implements Listener {
             }
         }
 
-        if(!player.hasPlayedBefore()){
-            lobby.getPlayerManager().joiningPlayer(player);
-        }
-
-
-
+        lobby.getPlayerManager().joiningPlayer(player);
     }
 }

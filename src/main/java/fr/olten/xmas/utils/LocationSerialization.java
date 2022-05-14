@@ -12,13 +12,13 @@ public class LocationSerialization {
         loc.setX(Double.parseDouble(str2loc[1]));
         loc.setY(Double.parseDouble(str2loc[2]));
         loc.setZ(Double.parseDouble(str2loc[3]));
-        loc.setPitch(Float.parseFloat(str2loc[4]));
         loc.setYaw(Float.parseFloat(str2loc[4]));
+        loc.setPitch(Float.parseFloat(str2loc[5]));
         return loc;
     }
 
     // Convert Location to string
     public static String serialize(Location loc){
-        return loc.getWorld().getName()+":"+loc.getBlockX()+":"+loc.getBlockY()+":"+loc.getBlockZ() + ":" + loc.getPitch() + ":" + loc.getYaw();
+        return loc.getWorld().getName()+":"+loc.getBlockX()+":"+loc.getBlockY()+":"+loc.getBlockZ() + ":" + loc.getYaw() + ":" + loc.getPitch();
     }
 }
