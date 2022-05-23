@@ -18,4 +18,8 @@ job("Warmup data for IDEA") {
         // use image specified in the devfile
         devfile = ".space/devfile.yaml"
     }
+    
+    failOn {
+        nonZeroExitCode { enabled = false }
+    }
 }
