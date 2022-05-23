@@ -18,8 +18,19 @@ job("Warmup data for IDEA") {
         // use image specified in the devfile
         devfile = ".space/devfile.yaml"
     }
-    
+   
+}
+
+job("Fail after 15 min") {
+    gradle("clean shadowJar")
+
     failOn {
+        testFailed { enabled = false }
         nonZeroExitCode { enabled = false }
+        outOfMemory { enabled = false }
+
+        timeOut {
+            runningTimeOutInMinutes = 15
+        }
     }
 }
