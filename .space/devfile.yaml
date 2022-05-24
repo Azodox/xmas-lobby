@@ -8,3 +8,7 @@ attributes:
         type: Idea
         version: '2022.1'
         updateChannel: Release
+components:
+  - name: dev-container
+    container:
+      image: openjdk-17:latest
