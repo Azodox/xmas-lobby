@@ -12,6 +12,4 @@ components:
   - name: java-container
     container:
       image: openjdk:17-oracle
-  - name: git-container
-    container:
       image: alpine/git:latest
