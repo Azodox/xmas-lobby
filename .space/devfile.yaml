@@ -9,6 +9,9 @@ attributes:
         version: '2022.1'
         updateChannel: Release
 components:
-  - name: dev-container
+  - name: java-container
     container:
       image: openjdk:17-oracle
+  - name: git-container
+    container:
+      image: alpine/git:latest
