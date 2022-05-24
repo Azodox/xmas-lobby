@@ -11,4 +11,4 @@ attributes:
 components:
   - name: dev-container
     container:
-      image: openjdk:17.0.2-jdk-oracle
+      image: openjdk:17-oracle
