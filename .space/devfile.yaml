@@ -13,4 +13,5 @@ components:
     container:
       image:
         imageName: my-image:latest
-        uri: Dockerfile
+        dockerfile:
+          uri: Dockerfile
