@@ -6,10 +6,3 @@ attributes:
       instanceType: large
       editor:
         type: Idea
-components:
-  - name: dev-container
-    container:
-      image:
-        imageName: my-image:latest
-        dockerfile:
-          uri: /Dockerfile
