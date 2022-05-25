@@ -13,3 +13,4 @@ components:
     container:
       image: openjdk:17-oracle
       image: bitnami/git:latest
+      image: mwendler/wget
