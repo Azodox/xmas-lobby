@@ -6,12 +6,10 @@ attributes:
       instanceType: large
       editor:
         type: Idea
-        version: '2022.1'
-        updateChannel: Release
 components:
   - name: dev-container
     container:
       image:
         imageName: my-image:latest
         dockerfile:
-          uri: Dockerfile
+          uri: /Dockerfile
