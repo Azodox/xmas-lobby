@@ -9,8 +9,7 @@ attributes:
         version: '2022.1'
         updateChannel: Release
 components:
-  - name: java-container
+  - name: dev-container
     container:
       image: openjdk:17-oracle
       image: bitnami/git:latest
-      image: cirrusci/wget:latest
