@@ -11,5 +11,6 @@ attributes:
 components:
   - name: dev-container
     container:
-      image: openjdk:17-oracle
-      image: bitnami/git:latest
+      image:
+        imageName: default-image:latest
+        uri: /Dockerfile
