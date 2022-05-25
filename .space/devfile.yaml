@@ -12,5 +12,5 @@ components:
   - name: dev-container
     container:
       image:
-        imageName: default-image:latest
-        uri: /Dockerfile
+        imageName: my-image:latest
+        uri: Dockerfile
