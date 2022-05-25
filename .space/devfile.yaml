@@ -6,3 +6,10 @@ attributes:
       instanceType: large
       editor:
         type: Idea
+components:
+  - name: image-build
+    image:
+      imageName: my-image:latest
+      dockerfile:
+        buildContext: docker
+        uri: docker/Dockerfile
