@@ -3,16 +3,26 @@ package fr.olten.xmas;
 import fr.olten.xmas.achievement.Achievement;
 import fr.olten.xmas.carousel.Carousel;
 import fr.olten.xmas.carousel.Engine;
-import fr.olten.xmas.listener.*;
+import fr.olten.xmas.elementary.ElementaryShootingRange;
+import fr.olten.xmas.listener.FallDamageListener;
+import fr.olten.xmas.listener.IncomingPluginMessageListener;
+import fr.olten.xmas.listener.ProtectionListener;
+import fr.olten.xmas.listener.RestInPeaceListener;
+import fr.olten.xmas.listener.entity.EntityDeathListener;
 import fr.olten.xmas.listener.horse.HorseDismountListener;
 import fr.olten.xmas.listener.horse.HorseGotDamagedListener;
 import fr.olten.xmas.listener.horse.HorseMountListener;
+import fr.olten.xmas.listener.player.PlayerCommandPreprocessListener;
+import fr.olten.xmas.listener.player.PlayerJoinListener;
+import fr.olten.xmas.listener.player.PlayerQuitListener;
+import fr.olten.xmas.listener.projectile.ProjectileLaunchedListener;
 import fr.olten.xmas.listener.rank.RankChangedListener;
 import fr.olten.xmas.listener.sign.SignBreakListener;
 import fr.olten.xmas.listener.sign.SignInteractListener;
 import fr.olten.xmas.manager.PlayerManager;
 import fr.olten.xmas.manager.TeamNameTagManager;
 import fr.olten.xmas.roulette.Roulette;
+import fr.olten.xmas.task.SpawnPortalParticle;
 import fr.olten.xmas.utils.Mongo;
 import net.valneas.account.rank.RankUnit;
 import org.bukkit.Bukkit;
@@ -31,11 +41,14 @@ public class Lobby extends JavaPlugin {
     private Carousel carousel;
     private Roulette roulette;
     private Mongo mongo;
+    private ElementaryShootingRange shootingRange;
 
     @Override
     public void onEnable() {
         this.saveDefaultConfig();
         this.mongo = new Mongo(this);
+
+        this.getServer().getScheduler().runTaskTimer(this, new SpawnPortalParticle(this), 0, 1);
 
         var DEFAULT_WORLD = Bukkit.getWorld("world");
         this.carousel = new Carousel(new Location(DEFAULT_WORLD, -483.0, 102.0, -461.0),
@@ -53,6 +66,7 @@ public class Lobby extends JavaPlugin {
                                              new Location(DEFAULT_WORLD, -558.0, 102.0, -423.0),new Location(DEFAULT_WORLD, -558.0, 103.0, -423.0),
                                              new Location(DEFAULT_WORLD, -558.0, 104.0, -423.0)),this);
 
+        this.shootingRange = new ElementaryShootingRange(this);
         new Engine(this).runTaskTimer(this, 0L, 1L);
 
         Arrays.stream(RankUnit.values()).forEach(TeamNameTagManager::init);
@@ -72,6 +86,11 @@ public class Lobby extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new SignBreakListener(this), this);
         getServer().getPluginManager().registerEvents(new RankChangedListener(), this);
         getServer().getPluginManager().registerEvents(new ProtectionListener(), this);
+        getServer().getPluginManager().registerEvents(new FallDamageListener(), this);
+        getServer().getPluginManager().registerEvents(new RestInPeaceListener(this), this);
+        getServer().getPluginManager().registerEvents(new EntityDeathListener(this), this);
+        getServer().getPluginManager().registerEvents(new ProjectileLaunchedListener(this), this);
+        getServer().getPluginManager().registerEvents(new PlayerCommandPreprocessListener(), this);
 
         getLogger().info("Enabled!");
     }
@@ -80,6 +99,7 @@ public class Lobby extends JavaPlugin {
     public void onDisable() {
         TeamNameTagManager.reset();
         carousel.despawn();
+        shootingRange.pluginDisable();
         getLogger().info("Disabled!");
     }
 
@@ -97,5 +117,9 @@ public class Lobby extends JavaPlugin {
 
     public PlayerManager getPlayerManager() {
         return playerManager;
+    }
+
+    public ElementaryShootingRange getShootingRange() {
+        return shootingRange;
     }
 }
