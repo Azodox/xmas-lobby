@@ -20,6 +20,7 @@ repositories {
     }
     maven { url 'https://jitpack.io' }
     maven { url 'https://repo.codemc.org/repository/maven-public/'}
+    maven { url 'https://s01.oss.sonatype.org/content/repositories/snapshots/' }
 }
 
 dependencies {
@@ -27,7 +28,7 @@ dependencies {
     implementation 'fr.mrmicky:FastParticles:2.0.0'
     implementation 'org.mongodb:mongodb-driver:3.12.10'
     shadow 'io.papermc.paper:paper-api:1.18.2-R0.1-SNAPSHOT'
-    shadow 'net.valneas:AccountSystem:0.3.3-xmas'
+    shadow 'io.github.azodox:accountsystem-paper:0.4.0-SNAPSHOT:all'
     shadow ('org.spigotmc:spigot:1.18.2-R0.1-SNAPSHOT'){
         exclude group: 'org.spigotmc', module: 'spigot-api'
     }
