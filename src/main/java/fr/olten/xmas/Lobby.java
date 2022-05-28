@@ -14,6 +14,7 @@ import fr.olten.xmas.listener.horse.HorseGotDamagedListener;
 import fr.olten.xmas.listener.horse.HorseMountListener;
 import fr.olten.xmas.listener.player.PlayerCommandPreprocessListener;
 import fr.olten.xmas.listener.player.PlayerJoinListener;
+import fr.olten.xmas.listener.player.PlayerMoveListener;
 import fr.olten.xmas.listener.player.PlayerQuitListener;
 import fr.olten.xmas.listener.projectile.ProjectileLaunchedListener;
 import fr.olten.xmas.listener.rank.RankChangedListener;
@@ -79,6 +80,7 @@ public class Lobby extends JavaPlugin {
 
         getServer().getPluginManager().registerEvents(new PlayerJoinListener(this), this);
         getServer().getPluginManager().registerEvents(new PlayerQuitListener(this), this);
+        getServer().getPluginManager().registerEvents(new PlayerMoveListener(this), this);
         getServer().getPluginManager().registerEvents(new HorseMountListener(this), this);
         getServer().getPluginManager().registerEvents(new HorseGotDamagedListener(this), this);
         getServer().getPluginManager().registerEvents(new HorseDismountListener(this), this);
