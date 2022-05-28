@@ -4,6 +4,8 @@ import com.google.common.base.Preconditions;
 import fr.olten.xmas.Lobby;
 import fr.olten.xmas.utils.ItemBuilder;
 import fr.olten.xmas.utils.LocationSerialization;
+import lombok.AccessLevel;
+import lombok.Getter;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.Style;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -31,19 +33,19 @@ import java.util.stream.Collectors;
 
 public class ElementaryShootingRange {
 
-    private final List<Player> players = new ArrayList<>();
+    private @Getter final List<Player> players = new ArrayList<>();
     private final List<UUID> participants = new ArrayList<>();
-    private final List<Location> spawningLocations;
+    private @Getter final List<Location> spawningLocations;
     private final Component prefix;
     private final Location outside;
     private final Location inside;
     private final int limit;
-    private final Lobby lobby;
+    private @Getter(AccessLevel.PACKAGE) final Lobby lobby;
     private final ItemBuilder bow;
     private final ItemBuilder arrow;
-    private final @NotNull File folder;
+    private final @Getter @NotNull File folder;
     private BukkitTask task;
-    private @Nullable ElementaryShootingRangeGame game;
+    private @Getter @Nullable ElementaryShootingRangeGame game;
 
     public ElementaryShootingRange(Lobby lobby) {
         this.lobby = lobby;
@@ -118,8 +120,10 @@ public class ElementaryShootingRange {
         if(game == null)
             return;
 
-        for (ArmorStand armorStand : game.getArmorStands()) {
-            game.kill(armorStand);
+        for(Iterator<ArmorStand> armorStand = game.getArmorStands().iterator(); armorStand.hasNext();) {
+            ArmorStand stand = armorStand.next();
+            game.kill(stand);
+            armorStand.remove();
         }
         this.participants.forEach(uuid -> {
             var player = Bukkit.getPlayer(uuid);
@@ -162,25 +166,5 @@ public class ElementaryShootingRange {
 
     public Set<Location> getLeavingSigns(){
         return lobby.getConfig().getStringList("shootingRange.leaveSigns").stream().map(LocationSerialization::deserialize).collect(Collectors.toSet());
-    }
-
-    public List<Player> getPlayers(){
-        return players;
-    }
-
-    public List<Location> getSpawningLocations() {
-        return spawningLocations;
-    }
-
-    public @Nullable ElementaryShootingRangeGame getGame() {
-        return game;
-    }
-
-    public @NotNull File getFolder() {
-        return folder;
-    }
-
-    Lobby getLobby() {
-        return lobby;
     }
 }
