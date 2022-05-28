@@ -67,7 +67,7 @@ public class ElementaryShootingRangeStatistics {
         if(!playerFolder.exists())
             playerFolder.mkdirs();
 
-        var now = LocalDate.now().format(DateTimeFormatter.BASIC_ISO_DATE);
+        var now = LocalDate.now().format(DateTimeFormatter.ISO_DATE);
 
         var gameFile = new File(playerFolder, shootingRange.getGame().getId() + "-" + now + ".yml");
         if(!gameFile.exists())
