@@ -41,6 +41,8 @@ public class PlayerJoinListener implements Listener {
             }
         }
 
+        Bukkit.getOnlinePlayers().forEach(p -> p.hidePlayer(lobby, player));
         lobby.getPlayerManager().joiningPlayer(player);
+        Bukkit.getScheduler().runTaskLater(lobby, () -> Bukkit.getOnlinePlayers().forEach(p -> p.showPlayer(lobby, player)), 50L);
     }
 }
