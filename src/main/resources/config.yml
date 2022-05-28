@@ -7,8 +7,12 @@ mongodb:
   authDatabase: minecraft
 
 spawn: "world:0:0:0:0:0"
+# Represents the location of player coming from the survival server.
 survivalSpawnPortal: "world:0:0:0:0:0"
+# Represents the portal from spawn to the village.
 portalToVillageCenter: "world:0:0:0:0:0"
+# Represents the location where the player is teleported if he passes the portal.
+villageLocation: "world:0:0:0:0:0"
 signs:
   teleportationToSpawn: "world:0:0:0:0:0"
 shootingRange:
