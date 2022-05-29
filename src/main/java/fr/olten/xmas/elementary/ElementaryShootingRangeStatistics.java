@@ -74,6 +74,7 @@ public class ElementaryShootingRangeStatistics {
             gameFile.createNewFile();
 
         var statisticsFile = YamlConfiguration.loadConfiguration(gameFile);
+        statisticsFile.set("gameId", shootingRange.getGame().getId());
         statisticsFile.set("date", now);
 
         killedStands.forEach((id, kills) -> {
@@ -84,7 +85,7 @@ public class ElementaryShootingRangeStatistics {
 
         upTimes.forEach((id, uptime) -> {
             if(id.equals(uuid)){
-                statisticsFile.set("statistics.timeSpent", uptime.toString());
+                statisticsFile.set("statistics.timeSpentInSec", uptime.getSeconds());
             }
         });
 
