@@ -7,13 +7,11 @@ import fr.olten.xmas.utils.LocationSerialization;
 import lombok.AccessLevel;
 import lombok.Getter;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.Style;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -37,7 +35,7 @@ public class ElementaryShootingRange {
     private final List<UUID> participants = new ArrayList<>();
     private @Getter final List<Location> spawningLocations;
     private final Component prefix;
-    private final Location outside;
+    private @Getter final Location outside;
     private final Location inside;
     private final int limit;
     private @Getter(AccessLevel.PACKAGE) final Lobby lobby;
@@ -120,31 +118,38 @@ public class ElementaryShootingRange {
         if(game == null)
             return;
 
-        for(Iterator<ArmorStand> armorStand = game.getArmorStands().iterator(); armorStand.hasNext();) {
-            ArmorStand stand = armorStand.next();
-            game.kill(stand);
-            armorStand.remove();
-        }
-        this.participants.forEach(uuid -> {
-            var player = Bukkit.getPlayer(uuid);
+        game.killAll();
+        for(var pts = this.participants.iterator(); pts.hasNext();){
+            var participant = pts.next();
+            var player = Bukkit.getPlayer(participant);
             if(player != null && player.isOnline()){
+                var uptime = game.getStatistics().getUptime(participant);
+                var seconds = uptime.toSecondsPart();
+                var minutes = uptime.toMinutesPart();
+                var hours = uptime.toHoursPart();
+
+                var formattedUptime = String.format("%02dh%02dm%02ds", hours, minutes, seconds);
+
+                var killedStands = game.getStatistics().getKilledStands(participant);
                 player.sendMessage(
                         prefix.append(Component.text(" Résumé de la dernière partie :")
                                 .append(Component.newline())
-                                .append(Component.text("Nombre de manches atteint : " + game.getStatistics().getBestScore()).style(Style.empty()))
+                                .append(Component.text("Nombre de manches atteint : " + game.getStatistics().getBestScore()))
                                 .append(Component.newline())
-                                .append(Component.text(String.format("Tué%s : %d", game.getStatistics().getBestScore() <= 1 ? "" : "s", game.getStatistics().getKilledStands(uuid))))
+                                .append(Component.text(String.format("Tué%s : %d", killedStands <= 1 ? "" : "s", killedStands)))
                                 .append(Component.newline())
-                                .append(Component.text("Temps passé dans la partie : " + game.getStatistics().getUptime(uuid).getSeconds() + " secondes")))
+                                .append(Component.text("Temps passé dans la partie : " + formattedUptime)))
                 );
             }
 
             try {
-                this.game.getStatistics().saveStatistic(uuid);
+                this.game.getStatistics().saveStatistic(participant);
+                pts.remove();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-        });
+        }
+        this.task.cancel();
         this.game = null;
     }
 
