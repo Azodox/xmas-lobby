@@ -21,8 +21,8 @@ public class EntityDeathListener implements Listener {
 
     @EventHandler
     public void onDeath(EntityDeathEvent event){
-        if(event.getEntity() instanceof ArmorStand armorStand && lobby.getShootingRange().getGame() != null && lobby.getShootingRange().getGame().getArmorStands().contains(armorStand)){
-            lobby.getShootingRange().getGame().hasBeenKilled(armorStand);
+        if(event.getEntity() instanceof ArmorStand armorStand && lobby.getShootingRange().getGame() != null && lobby.getShootingRange().getGame().getArmorStands().contains(armorStand) && lobby.getShootingRange().getGame().isRunning()){
+            lobby.getShootingRange().getGame().hasBeenKilled(armorStand, event.getEntity().getKiller());
             event.getDrops().clear();
         }
     }
