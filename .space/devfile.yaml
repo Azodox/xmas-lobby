@@ -1,0 +1,15 @@
+schemaVersion: 2.2.0
+metadata:
+  name: 'Default config for IntelliJ IDEA'
+attributes:
+    space:
+      instanceType: large
+      editor:
+        type: Idea
+components:
+  - name: image-build
+    image:
+      imageName: my-image:latest
+      dockerfile:
+        buildContext: docker
+        uri: docker/Dockerfile
