@@ -1,4 +1,4 @@
-package fr.olten.xmas.listener;
+package fr.olten.xmas.listener.player;
 
 import fr.olten.xmas.Lobby;
 import fr.olten.xmas.manager.TeamNameTagManager;
@@ -41,6 +41,8 @@ public class PlayerJoinListener implements Listener {
             }
         }
 
+        Bukkit.getOnlinePlayers().forEach(p -> p.hidePlayer(lobby, player));
         lobby.getPlayerManager().joiningPlayer(player);
+        Bukkit.getScheduler().runTaskLater(lobby, () -> Bukkit.getOnlinePlayers().forEach(p -> p.showPlayer(lobby, player)), 50L);
     }
 }

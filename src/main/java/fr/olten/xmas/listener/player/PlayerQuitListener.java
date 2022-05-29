@@ -1,4 +1,4 @@
-package fr.olten.xmas.listener;
+package fr.olten.xmas.listener.player;
 
 import fr.olten.xmas.Lobby;
 import org.bukkit.event.EventHandler;
@@ -18,6 +18,10 @@ public class PlayerQuitListener implements Listener {
         var player = event.getPlayer();
         if(lobby.getCarousel().manager().isRiding(player)){
             lobby.getCarousel().manager().dismount(player);
+        }
+
+        if(lobby.getShootingRange().getPlayers().contains(player)){
+            lobby.getShootingRange().leave(player);
         }
     }
 }

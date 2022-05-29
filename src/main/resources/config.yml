@@ -7,4 +7,23 @@ mongodb:
   authDatabase: minecraft
 
 spawn: "world:0:0:0:0:0"
+# Represents the location of player coming from the survival server.
 survivalSpawnPortal: "world:0:0:0:0:0"
+# Represents the portal from spawn to the village.
+portalToVillageCenter: "world:0:0:0:0:0"
+# Represents the location where the player is teleported if he passes the portal.
+villageLocation: "world:0:0:0:0:0"
+signs:
+  teleportationToSpawn: "world:0:0:0:0:0"
+shootingRange:
+  prefix: '<color:aqua>[Shooting Range]</color>'
+  # The limits of player that can be in the shooting range at the same time. Put -1 for no limit.
+  limit: 2
+  outsideLocation: "world:0:0:0:0:0"
+  insideLocation: "world:0:0:0:0:0"
+  joinSigns:
+    - "world:0:0:0:0:0"
+  leaveSigns:
+    - "world:0:0:0:0:0"
+  spawningLocations:
+    - "world:0:0:0:0:0"
