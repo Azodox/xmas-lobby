@@ -1,6 +1,7 @@
 package fr.olten.xmas.elementary;
 
 import fr.mrmicky.fastparticles.ParticleType;
+import lombok.Getter;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
@@ -10,15 +11,11 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.BlockFace;
-import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.EntityType;
+import org.bukkit.entity.*;
 import org.bukkit.util.Vector;
 
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * @author Azodox_ (Luke)
@@ -32,7 +29,7 @@ public class ElementaryShootingRangeGame implements Runnable {
     private final List<ArmorStand> armorStands = new ArrayList<>();
     private final String id;
     private int round;
-    private boolean running;
+    @Getter private boolean running;
 
     public ElementaryShootingRangeGame(ElementaryShootingRange shootingRange) {
         this.shootingRange = shootingRange;
@@ -83,6 +80,21 @@ public class ElementaryShootingRangeGame implements Runnable {
 
         this.spawn();
         this.running = true;
+    }
+
+    public void standTouchedLine() {
+        if (!running)
+            return;
+
+        for(var players = shootingRange.getPlayers().iterator(); players.hasNext();) {
+            var player = players.next();
+            if(player.isOnline()) {
+                player.teleport(shootingRange.getOutside());
+                shootingRange.removeItems(player);
+                players.remove();
+            }
+        }
+        shootingRange.endingGame();
     }
 
     private void moveStands(){
@@ -136,6 +148,18 @@ public class ElementaryShootingRangeGame implements Runnable {
         shootingRange.getPlayers().forEach(player -> player.playSound(player, sound, 1.0f, 1.0f));
     }
 
+    public void killAll(){
+        if(!running)
+            return;
+
+        running = false;
+        for(Iterator<ArmorStand> armorStand = this.getArmorStands().iterator(); armorStand.hasNext();) {
+            ArmorStand stand = armorStand.next();
+            this.kill(stand);
+            armorStand.remove();
+        }
+    }
+
     public void kill(ArmorStand armorStand){
         if(armorStand == null)
             return;
@@ -144,11 +168,11 @@ public class ElementaryShootingRangeGame implements Runnable {
         armorStand.remove();
     }
 
-    public void hasBeenKilled(ArmorStand armorStand){
+    public void hasBeenKilled(ArmorStand armorStand, Player killer){
         armorStands.remove(armorStand);
 
-        if(armorStand.getKiller() != null)
-            armorStand.getKiller().playSound(armorStand.getKiller(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 0.5f);
+        this.getStatistics().addKilledStand(killer);
+        killer.playSound(killer, Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 0.5f);
 
         if(armorStands.isEmpty())
             this.nextRound();
