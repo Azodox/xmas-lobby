@@ -8,6 +8,7 @@ import fr.olten.xmas.listener.FallDamageListener;
 import fr.olten.xmas.listener.IncomingPluginMessageListener;
 import fr.olten.xmas.listener.ProtectionListener;
 import fr.olten.xmas.listener.RestInPeaceListener;
+import fr.olten.xmas.listener.entity.EntityDamageByEntityListener;
 import fr.olten.xmas.listener.entity.EntityDeathListener;
 import fr.olten.xmas.listener.entity.EntityMoveListener;
 import fr.olten.xmas.listener.horse.HorseDismountListener;
@@ -91,6 +92,7 @@ public class Lobby extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new ProtectionListener(), this);
         getServer().getPluginManager().registerEvents(new FallDamageListener(), this);
         getServer().getPluginManager().registerEvents(new RestInPeaceListener(this), this);
+        getServer().getPluginManager().registerEvents(new EntityDamageByEntityListener(this), this);
         getServer().getPluginManager().registerEvents(new EntityDeathListener(this), this);
         getServer().getPluginManager().registerEvents(new EntityMoveListener(this), this);
         getServer().getPluginManager().registerEvents(new ProjectileLaunchedListener(this), this);
