@@ -20,9 +20,8 @@ public class EntityDamageByEntityListener implements Listener {
     public void onEntityDamageEntity(EntityDamageByEntityEvent event){
         if(event.getEntity() instanceof ArmorStand armorStand && lobby.getShootingRange().getGame().getArmorStands().contains(armorStand) && lobby.getShootingRange().getGame().isRunning()){
             if(event.getDamager() instanceof Arrow arrow && arrow.getShooter() instanceof Player shooter){
-                if(armorStand.isDead()){
-                    lobby.getShootingRange().getGame().hasBeenKilled(armorStand, shooter);
-                }
+                lobby.getShootingRange().getGame().kill(armorStand);
+                lobby.getShootingRange().getGame().hasBeenKilled(armorStand, shooter);
             }
         }
     }
