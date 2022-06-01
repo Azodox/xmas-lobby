@@ -172,7 +172,7 @@ public class ElementaryShootingRangeGame implements Runnable {
         armorStands.remove(armorStand);
 
         this.getStatistics().addKilledStand(killer);
-        killer.playSound(killer, Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 0.5f);
+        killer.playSound(killer, Sound.ENTITY_PLAYER_LEVELUP, 0.5f, 1f);
 
         if(armorStands.isEmpty())
             this.nextRound();
