@@ -23,9 +23,5 @@ job("Warmup data for IDEA") {
         testFailed { enabled = false }
         nonZeroExitCode { enabled = false }
         outOfMemory { enabled = false }
-
-        timeOut {
-            runningTimeOutInMinutes = 15
-        }
     }
 }
