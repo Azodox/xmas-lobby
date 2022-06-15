@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 
 public class KeyDAL {
 
-    private Lobby main;
+    private final Lobby main;
     private final MongoClient mongo;
 
     public KeyDAL(Lobby main) {
@@ -28,7 +28,7 @@ public class KeyDAL {
     public void initPlayerKeys(Player player) {
         if(hasKeys(player)) return;
 
-        if(getDatabase().getCollection("player_keys").count() == 0) {
+        if(getDatabase().getCollection("player_keys").countDocuments() == 0) {
             getDatabase().createCollection("player_keys");
         }
 

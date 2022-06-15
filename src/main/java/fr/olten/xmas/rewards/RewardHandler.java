@@ -1,9 +1,9 @@
 package fr.olten.xmas.rewards;
 
+import dev.morphia.query.experimental.updates.UpdateOperators;
 import fr.olten.xmas.Lobby;
 import net.valneas.account.AccountManager;
 import net.valneas.account.AccountSystem;
-import net.valneas.account.rank.Rank;
 import net.valneas.account.rank.RankUnit;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -97,7 +97,7 @@ public class RewardHandler {
             if(provider != null){
                 var accountSystem = provider.getProvider();
                 final AccountManager accountManager = new AccountManager(accountSystem, player);
-                accountManager.set("xp",(int)accountManager.get("xp") + amount);
+                accountManager.getAccountQuery().update(UpdateOperators.inc("xp", amount)).execute();
             }
             return;
         }
@@ -111,7 +111,7 @@ public class RewardHandler {
             if(provider != null){
                 var accountSystem = provider.getProvider();
                 final AccountManager accountManager = new AccountManager(accountSystem, player);
-                accountManager.set("level",(int)accountManager.get("level") + amount);
+                accountManager.getAccountQuery().update(UpdateOperators.inc("level", amount)).execute();
             }
             return;
         }
@@ -124,7 +124,7 @@ public class RewardHandler {
             var provider = Bukkit.getServicesManager().getRegistration(AccountSystem.class);
             if(provider != null){
                 var accountSystem = provider.getProvider();
-                accountSystem.getPermissionDispatcher().set(player, permission);
+                accountSystem.getPermissionDispatcher().addPermissionToObject(player, permission);
             }
             return;
         }
@@ -138,7 +138,7 @@ public class RewardHandler {
             if(provider != null){
                 var accountSystem = provider.getProvider();
                 final AccountManager accountManager = new AccountManager(accountSystem, player);
-                accountManager.set("points",(int)accountManager.get("points") + points);
+                accountManager.getAccountQuery().update(UpdateOperators.inc("points", points)).execute();
             }
             return;
         }
@@ -152,9 +152,9 @@ public class RewardHandler {
             if(provider != null){
                 var accountSystem = provider.getProvider();
                 final AccountManager accountManager = new AccountManager(accountSystem, player);
-                final Rank rankManager = accountManager.newRankManager();
-                if(rankManager.getRanks().contains(RankUnit.getByName(rank))) {
-                    rankManager.addRank(RankUnit.getByName(rank));
+                final var rankManager = accountManager.newRankManager();
+                if(rankManager.getRanks().contains(accountSystem.getRankHandler().getByName(rank).first())) {
+                    rankManager.addRank((RankUnit) accountSystem.getRankHandler().getByName(rank).first(), null, true);
                     return;
                 }
                 Bukkit.getLogger().severe("Given rank is not recognized, not rewarded.");
