@@ -1,5 +1,6 @@
 package fr.olten.xmas.manager;
 
+import com.google.common.base.Preconditions;
 import net.valneas.account.AccountManager;
 import net.valneas.account.AccountSystem;
 import net.valneas.account.rank.RankUnit;
@@ -49,8 +50,10 @@ public class TeamNameTagManager {
      * @param player The player to update.
      */
     public static void update(Player player){
-        var accountSystem = (AccountSystem) Bukkit.getPluginManager().getPlugin("AccountSystem");
-        var accountManager = new AccountManager(accountSystem, player);
+        var provider = Bukkit.getServicesManager().getRegistration(AccountSystem.class);
+        Preconditions.checkNotNull(provider, "AccountSystem is not registered");
+
+        var accountManager = new AccountManager(provider.getProvider(), player);
         update(accountManager);
     }
 
