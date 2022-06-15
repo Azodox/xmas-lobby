@@ -27,6 +27,7 @@ import fr.olten.xmas.manager.TeamNameTagManager;
 import fr.olten.xmas.roulette.Roulette;
 import fr.olten.xmas.task.SpawnPortalParticle;
 import fr.olten.xmas.utils.Mongo;
+import net.valneas.account.AccountSystem;
 import net.valneas.account.rank.RankUnit;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -72,13 +73,17 @@ public class Lobby extends JavaPlugin {
         this.shootingRange = new ElementaryShootingRange(this);
         new Engine(this).runTaskTimer(this, 0L, 1L);
 
-        Arrays.stream(RankUnit.values()).forEach(TeamNameTagManager::init);
+        var provider = getServer().getServicesManager().getRegistration(AccountSystem.class);
+        if(provider != null){
+            provider.getProvider().getRankHandler().getAllRanksQuery().stream().map(rank -> (RankUnit) rank).forEach(TeamNameTagManager::init);
+        }
         getServer().getOnlinePlayers().forEach(TeamNameTagManager::update);
 
         this.registerAchievements();
 
         this.getServer().getMessenger().registerIncomingPluginChannel(this, "xmas:lobbysurvie", new IncomingPluginMessageListener(this));
         this.getServer().getMessenger().registerOutgoingPluginChannel(this, "xmas:lobbysurvie");
+        this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 
         getServer().getPluginManager().registerEvents(new PlayerJoinListener(this), this);
         getServer().getPluginManager().registerEvents(new PlayerQuitListener(this), this);
