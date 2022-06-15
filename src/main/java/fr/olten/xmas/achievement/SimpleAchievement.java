@@ -1,5 +1,6 @@
 package fr.olten.xmas.achievement;
 
+import dev.morphia.query.experimental.updates.UpdateOperators;
 import net.kyori.adventure.text.Component;
 import net.valneas.account.AccountManager;
 import net.valneas.account.AccountSystem;
@@ -41,7 +42,7 @@ public abstract class SimpleAchievement implements Achievement {
         if(provider != null){
             var accountSystem = provider.getProvider();
             var accountManager = new AccountManager(accountSystem, Bukkit.getOfflinePlayer(uuid).getName(), uuid.toString());
-            accountManager.set("points", (int) accountManager.get("points") + this.earnedPoints);
+            accountManager.getAccountQuery().update(UpdateOperators.inc("points", this.earnedPoints)).execute();
 
             var optionalTarget = Bukkit.getPlayer(uuid);
             if(optionalTarget != null && optionalTarget.isOnline()){
