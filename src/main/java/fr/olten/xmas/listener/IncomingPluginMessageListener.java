@@ -1,5 +1,6 @@
 package fr.olten.xmas.listener;
 
+import com.google.common.base.Preconditions;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
 import fr.olten.xmas.Lobby;
@@ -24,9 +25,19 @@ public class IncomingPluginMessageListener implements PluginMessageListener {
             ByteArrayDataInput in = ByteStreams.newDataInput(message);
             String subChannel = in.readUTF();
 
-            if(subChannel.equals("Incoming")){
-                UUID uuid = UUID.fromString(in.readUTF());
-                lobby.getPlayerManager().joiningPlayerFromSurvival(Objects.requireNonNull(Bukkit.getPlayer(uuid)));
+            switch (subChannel) {
+                case "Incoming" -> {
+                    var uuid = UUID.fromString(in.readUTF());
+                    lobby.getPlayerManager().joiningPlayerFromSurvival(Objects.requireNonNull(Bukkit.getPlayer(uuid)));
+                }
+
+                case "UnableToConnectTo" -> {
+                    var serverName = in.readUTF();
+                    var uuid = UUID.fromString(in.readUTF());
+                    if(serverName.equals(lobby.getConfig().getString("serversName.survival"))) {
+                        lobby.getPlayerManager().unableToConnectTo(Preconditions.checkNotNull(Bukkit.getPlayer(uuid), "Player not found"));
+                    }
+                }
             }
         }
     }
