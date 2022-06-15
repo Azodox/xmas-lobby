@@ -1,8 +1,12 @@
 package fr.olten.xmas.manager;
 
+import com.google.common.base.Preconditions;
 import fr.mrmicky.fastparticles.ParticleType;
 import fr.olten.xmas.Lobby;
 import fr.olten.xmas.utils.LocationSerialization;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
 import java.util.Objects;
@@ -24,7 +28,7 @@ public class PlayerManager {
 
     public void joiningPlayerFromSurvival(Player player){
         var magic = ParticleType.of("SPELL_WITCH");
-        var survivalPortalSpawnLocation = LocationSerialization.deserialize(Objects.requireNonNull(lobby.getConfig().getString("survivalSpawnPortal")));
+        var survivalPortalSpawnLocation = LocationSerialization.deserialize(Preconditions.checkNotNull(lobby.getConfig().getString("survivalSpawnPortal"), "survivalSpawnPortal is not defined"));
 
         var particleLocation = survivalPortalSpawnLocation.clone();
         /*
@@ -46,5 +50,13 @@ public class PlayerManager {
 
         lobby.getServer().getScheduler().runTaskLater(lobby, task::cancel, 20 * 2);
         player.teleport(survivalPortalSpawnLocation);
+    }
+
+    public void unableToConnectTo(Player player) {
+        var sound = Sound.ENTITY_ENDERMAN_TELEPORT;
+        var survivalPortalSpawnLocation = LocationSerialization.deserialize(Preconditions.checkNotNull(lobby.getConfig().getString("survivalSpawnPortal"), "survivalSpawnPortal is not defined"));
+        player.playSound(player, sound, 1f, 0.5f);
+        player.teleport(survivalPortalSpawnLocation);
+        player.sendActionBar(Component.text("Le serveur survie n'est pas disponible, veuillez réessayer plus tard.").color(NamedTextColor.RED));
     }
 }
