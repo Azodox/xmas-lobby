@@ -27,3 +27,7 @@ shootingRange:
     - "world:0:0:0:0:0"
   spawningLocations:
     - "world:0:0:0:0:0"
+teleportToSurvivalLocation: "world:0:0:0:0:0"
+
+serversName:
+  survival: "survival"
