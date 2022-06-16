@@ -13,6 +13,9 @@ public class Engine extends BukkitRunnable {
 
     @Override
     public void run() {
+        if(this.lobby.getCarousel() == null)
+            return;
+
         this.lobby.getCarousel().update();
     }
 }
