@@ -1,7 +1,7 @@
 package fr.olten.xmas.listener.entity;
 
 import fr.olten.xmas.Lobby;
-import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.NPC;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
@@ -21,7 +21,7 @@ public class EntityDeathListener implements Listener {
 
     @EventHandler
     public void onDeath(EntityDeathEvent event){
-        if(event.getEntity() instanceof ArmorStand armorStand && lobby.getShootingRange().getGame() != null && lobby.getShootingRange().getGame().getArmorStands().contains(armorStand) && lobby.getShootingRange().getGame().isRunning()){
+        if(event.getEntity() instanceof NPC npc && lobby.getShootingRange().getGame() != null && lobby.getShootingRange().getGame().getNPCs().contains(npc) && lobby.getShootingRange().getGame().isRunning()){
             event.getDrops().clear();
         }
     }

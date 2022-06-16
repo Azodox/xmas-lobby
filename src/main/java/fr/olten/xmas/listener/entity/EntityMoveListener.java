@@ -4,7 +4,7 @@ import fr.olten.xmas.Lobby;
 import io.papermc.paper.event.entity.EntityMoveEvent;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
-import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.NPC;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
@@ -27,9 +27,9 @@ public class EntityMoveListener implements Listener {
         if(lobby.getShootingRange().getGame() == null)
             return;
 
-        if(event.getEntity() instanceof ArmorStand armorStand) {
-            if (lobby.getShootingRange().getGame().getArmorStands().contains(armorStand)) {
-                if (armorStand.getLocation().getBlock().getRelative(BlockFace.DOWN).getType().equals(Material.RED_CONCRETE)) {
+        if(event.getEntity() instanceof NPC npc) {
+            if (lobby.getShootingRange().getGame().getNPCs().contains(npc)) {
+                if (npc.getLocation().getBlock().getRelative(BlockFace.DOWN).getType().equals(Material.RED_CONCRETE)) {
                     lobby.getShootingRange().getGame().standTouchedLine();
                 }
             }
