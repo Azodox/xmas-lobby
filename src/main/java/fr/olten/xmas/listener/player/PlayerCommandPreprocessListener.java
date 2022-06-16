@@ -18,7 +18,9 @@ public class PlayerCommandPreprocessListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onCommand(PlayerCommandPreprocessEvent event){
-        if(event.getMessage().equalsIgnoreCase("/kill @e") || event.getMessage().contains("/kill @e[type=armor_stand]")){
+        if(event.getMessage().equalsIgnoreCase("/kill @e")
+                || event.getMessage().equalsIgnoreCase("/kill @e[type=armor_stand]")
+                || event.getMessage().equalsIgnoreCase("/kill @e[type=minecraft:armor_stand]")){
             event.getPlayer().sendMessage(Component.text("Espèce de fou, tu veux tuer tout le monde ?").color(NamedTextColor.DARK_RED).decorate(TextDecoration.BOLD));
             event.setCancelled(true);
         }
