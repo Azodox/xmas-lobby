@@ -6,12 +6,12 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.title.Title;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.BlockFace;
-import org.bukkit.entity.*;
+import org.bukkit.entity.NPC;
+import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
 import java.time.Duration;
@@ -26,7 +26,7 @@ public class ElementaryShootingRangeGame implements Runnable {
 
     private final ElementaryShootingRange shootingRange;
     private final ElementaryShootingRangeStatistics statistics;
-    private final List<ArmorStand> armorStands = new ArrayList<>();
+    private final List<NPC> npcs = new ArrayList<>();
     private final String id;
     private int round;
     @Getter private boolean running;
@@ -98,33 +98,35 @@ public class ElementaryShootingRangeGame implements Runnable {
     }
 
     private void moveStands(){
-        if(armorStands.isEmpty())
+        if(npcs.isEmpty())
             return;
 
         var random = new Random();
 
-        armorStands.forEach(armorStand -> {
-            var south = armorStand.getLocation().getBlock().getRelative(BlockFace.SOUTH);
-            var north = armorStand.getLocation().getBlock().getRelative(BlockFace.NORTH);
-            var west = armorStand.getLocation().getBlock().getRelative(BlockFace.WEST);
-            var eye = armorStand.getEyeLocation().getBlock().getRelative(BlockFace.WEST);
+        npcs.forEach(npc -> {
+            var south = npc.getLocation().getBlock().getRelative(BlockFace.SOUTH);
+            var north = npc.getLocation().getBlock().getRelative(BlockFace.NORTH);
+            var west = npc.getLocation().getBlock().getRelative(BlockFace.WEST);
+            var eye = npc.getEyeLocation().getBlock().getRelative(BlockFace.WEST);
 
             double z = Double.parseDouble((random.nextBoolean() ? "-" : "") + 0.30d);
             if(west.getType() != Material.AIR && south.getType() == Material.AIR && north.getType() == Material.AIR && eye.getType() == Material.AIR) {
-                armorStand.setVelocity(new Vector(-0.45, 1, 0));
+                npc.setVelocity(new Vector(-0.45, 1, 0));
             } else if(west.getType() != Material.AIR && (south.getType() == Material.AIR && north.getType() != Material.AIR || north.getType() == Material.AIR && south.getType() != Material.AIR)) {
-                if(armorStand.getLocation().add(0, 0, -2).getBlock().getRelative(BlockFace.NORTH).getType() == Material.AIR)
-                    armorStand.setVelocity(new Vector(0, 0, -0.5));
-                else if(armorStand.getLocation().add(0, 0, 2).getBlock().getRelative(BlockFace.SOUTH).getType() == Material.AIR)
-                    armorStand.setVelocity(new Vector(0, 0, 0.5));
+                if(npc.getLocation().add(0, 0, -2).getBlock().getRelative(BlockFace.NORTH).getType() == Material.AIR)
+                    npc.setVelocity(new Vector(0, 0, -0.5));
+                else if(npc.getLocation().add(0, 0, 2).getBlock().getRelative(BlockFace.SOUTH).getType() == Material.AIR)
+                    npc.setVelocity(new Vector(0, 0, 0.5));
                 else
-                    armorStand.setVelocity(new Vector(-0.25, 0.50, 0));
+                    npc.setVelocity(new Vector(-0.25, 0.50, 0));
             } else if(west.getType() == Material.AIR && south.getType() == Material.AIR && north.getType() == Material.AIR && eye.getType() == Material.AIR) {
-                armorStand.setVelocity(new Vector(-0.15, 0, 0));
+                npc.setVelocity(new Vector(-0.15, 0, 0));
             } else {
-                armorStand.setVelocity(new Vector(-0.30, 0, z));
+                npc.setVelocity(new Vector(-0.30, 0, z));
             }
         });
+
+
     }
 
     private void spawn(){
@@ -137,14 +139,9 @@ public class ElementaryShootingRangeGame implements Runnable {
         var sound = Sound.BLOCK_NOTE_BLOCK_BIT;
 
         for (int i = 0; i < amount - 1; i++) {
-            var location = shootingRange.getSpawningLocations().get(random.nextInt(shootingRange.getSpawningLocations().size()));
-            var armorStand = spawnArmorStand(location);
-            armorStand.setSmall(random.nextBoolean());
-            if (armorStand.isSmall()) {
-                Bukkit.getScheduler().runTaskLater(shootingRange.getLobby(), () -> kill(armorStand), 100L);
-            }
+            spawnNPC(shootingRange.getSpawningLocations().get(random.nextInt(shootingRange.getSpawningLocations().size())));
         }
-        spawnArmorStand(shootingRange.getSpawningLocations().get(random.nextInt(shootingRange.getSpawningLocations().size())));
+        spawnNPC(shootingRange.getSpawningLocations().get(random.nextInt(shootingRange.getSpawningLocations().size())));
         shootingRange.getPlayers().forEach(player -> player.playSound(player, sound, 1.0f, 1.0f));
     }
 
@@ -153,56 +150,52 @@ public class ElementaryShootingRangeGame implements Runnable {
             return;
 
         running = false;
-        for(Iterator<ArmorStand> armorStand = this.getArmorStands().iterator(); armorStand.hasNext();) {
-            ArmorStand stand = armorStand.next();
+        for(Iterator<NPC> npc = this.getNPCs().iterator(); npc.hasNext();) {
+            NPC stand = npc.next();
             this.kill(stand);
-            armorStand.remove();
+            npc.remove();
         }
     }
 
-    public void kill(ArmorStand armorStand){
-        if(armorStand == null)
+    public void kill(NPC npc){
+        if(npc == null)
             return;
 
-        armorStand.setHealth(0.0d);
-        armorStand.remove();
+        npc.setHealth(0.0d);
+        npc.remove();
     }
 
-    public void hasBeenKilled(ArmorStand armorStand, Player killer){
-        armorStands.remove(armorStand);
+    public void hasBeenKilled(NPC npc, Player killer){
+        npcs.remove(npc);
 
         this.getStatistics().addKilledStand(killer);
         killer.playSound(killer, Sound.ENTITY_PLAYER_LEVELUP, 0.5f, 1f);
 
-        if(armorStands.isEmpty())
+        if(npcs.isEmpty())
             this.nextRound();
     }
 
-    private ArmorStand spawnArmorStand(Location location){
+    private NPC spawnNPC(Location location){
         var particle = ParticleType.of("CLOUD");
         var random = new Random();
-        var armorStand = (ArmorStand) location.getWorld().spawnEntity(location, EntityType.ARMOR_STAND);
-        armorStand.setVisible(true);
-        armorStand.setGravity(true);
-        armorStand.setBasePlate(false);
-        armorStand.setArms(random.nextBoolean());
-        armorStand.setRotation(location.getYaw(), location.getPitch());
-        armorStand.customName(random.nextBoolean() ? Component.text("Dinnerbone") : Component.empty());
-        armorStand.setCustomNameVisible(false);
-        armorStand.setSwimming(random.nextBoolean());
-        armorStand.setGliding(random.nextBoolean());
-        armorStand.setGlowing(random.nextBoolean());
-        armorStand.setInvulnerable(false);
-        armorStand.setHealth(20.0);
-        armorStand.setArms(true);
-        armorStands.add(armorStand);
+        var npc = location.getWorld().spawn(location, NPC.class);
+        npc.setGravity(true);
+        npc.setRotation(location.getYaw(), location.getPitch());
+        npc.customName(random.nextBoolean() ? Component.text("Dinnerbone") : Component.empty());
+        npc.setCustomNameVisible(false);
+        npc.setSwimming(random.nextBoolean());
+        npc.setGliding(random.nextBoolean());
+        npc.setGlowing(random.nextBoolean());
+        npc.setInvulnerable(false);
+        npc.setHealth(20.0);
+        npcs.add(npc);
 
-        particle.spawn(location.getWorld(), armorStand.getEyeLocation(), 1, 0.2, 0.5, 0.2, 0);
-        return armorStand;
+        particle.spawn(location.getWorld(), npc.getEyeLocation(), 1, 0.2, 0.5, 0.2, 0);
+        return npc;
     }
 
-    public List<ArmorStand> getArmorStands() {
-        return armorStands;
+    public List<NPC> getNPCs() {
+        return npcs;
     }
 
     public ElementaryShootingRangeStatistics getStatistics() {
