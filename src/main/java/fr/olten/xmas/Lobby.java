@@ -50,7 +50,12 @@ public class Lobby extends JavaPlugin {
     @Override
     public void onEnable() {
         this.saveDefaultConfig();
-        this.mongo = new Mongo(this);
+        this.mongo = new Mongo(
+                getConfig().getString("mongodb.username"),
+                getConfig().getString("mongodb.authDatabase"),
+                getConfig().getString("mongodb.password"),
+                getConfig().getString("mongodb.host"),
+                getConfig().getInt("mongodb.port"));
 
         this.getServer().getScheduler().runTaskTimer(this, new SpawnPortalParticle(this), 0, 1);
 
