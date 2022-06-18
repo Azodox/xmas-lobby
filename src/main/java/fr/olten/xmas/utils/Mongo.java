@@ -1,34 +1,47 @@
 package fr.olten.xmas.utils;
 
-import com.mongodb.*;
-import fr.olten.xmas.Lobby;
+import com.mongodb.MongoClientSettings;
+import com.mongodb.MongoCredential;
+import com.mongodb.ServerAddress;
+import com.mongodb.WriteConcern;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
+import com.mongodb.connection.ClusterConnectionMode;
+
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class Mongo {
 
     private final MongoClient mongoClient;
 
-    public Mongo(Lobby main) {
+    public Mongo(String username, String authDatabase, String password, String host, int port) {
         MongoCredential credential = MongoCredential.createCredential(
-                main.getConfig().getString("mongodb.username"),
-                main.getConfig().getString("mongodb.authDatabase"),
-                main.getConfig().getString("mongodb.password").toCharArray()
+                username,
+                authDatabase,
+                password.toCharArray()
         );
 
-        MongoClientOptions options = MongoClientOptions.builder()
-                .connectionsPerHost(10)
-                .connectTimeout(100000)
-                .maxWaitTime(100000)
-                .socketTimeout(1000)
-                .heartbeatConnectTimeout(600000)
+        MongoClientSettings options = MongoClientSettings.builder()
+                .applyToClusterSettings(builder -> {
+                    builder.hosts(List.of(new ServerAddress(host, port)));
+                    builder.mode(ClusterConnectionMode.MULTIPLE);
+                    builder.serverSelectionTimeout(10, TimeUnit.SECONDS);
+                })
+                .applyToConnectionPoolSettings(builder ->{
+                    builder.maxWaitTime(30, TimeUnit.SECONDS);
+                    builder.maxConnectionLifeTime(2, TimeUnit.HOURS);
+                    builder.maxConnectionIdleTime(30, TimeUnit.MINUTES);
+                })
+                .applyToSocketSettings(builder -> {
+                    builder.connectTimeout(10, TimeUnit.SECONDS);
+                    builder.readTimeout(30, TimeUnit.SECONDS);
+                })
                 .writeConcern(WriteConcern.ACKNOWLEDGED)
+                .credential(credential)
                 .build();
 
-        this.mongoClient = new MongoClient(
-                new ServerAddress(
-                        main.getConfig().getString("mongodb.host"),
-                        main.getConfig().getInt("mongodb.port")),
-                credential, options
-        );
+        this.mongoClient = MongoClients.create(options);
     }
 
     public MongoClient getMongoClient() {
