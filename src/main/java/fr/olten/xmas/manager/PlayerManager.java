@@ -34,7 +34,7 @@ public class PlayerManager {
         /*
             Credits to Finnbon (https://linktr.ee/finnbon)
          */
-        var task = lobby.getServer().getScheduler().runTaskTimer(lobby, () -> {
+        var task = lobby.getServer().getScheduler().runTaskTimerAsynchronously(lobby, () -> {
             for (double i = 0; i <= Math.PI; i += Math.PI / 15) { // 10 being the amount of circles.
                 double radius = Math.sin(i); // we get the current radius
                 double y = Math.cos(i); // we get the current y value.
@@ -48,7 +48,7 @@ public class PlayerManager {
             }
         }, 0, 1);
 
-        lobby.getServer().getScheduler().runTaskLater(lobby, task::cancel, 20 * 2);
+        lobby.getServer().getScheduler().runTaskLaterAsynchronously(lobby, task::cancel, 20 * 2);
         player.teleport(survivalPortalSpawnLocation);
     }
 
