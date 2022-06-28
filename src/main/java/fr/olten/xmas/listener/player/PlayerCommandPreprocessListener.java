@@ -20,7 +20,9 @@ public class PlayerCommandPreprocessListener implements Listener {
     public void onCommand(PlayerCommandPreprocessEvent event){
         if(event.getMessage().equalsIgnoreCase("/kill @e")
                 || event.getMessage().equalsIgnoreCase("/kill @e[type=armor_stand]")
-                || event.getMessage().equalsIgnoreCase("/kill @e[type=minecraft:armor_stand]")){
+                || event.getMessage().equalsIgnoreCase("/kill @e[type=minecraft:armor_stand]")
+                || event.getMessage().equalsIgnoreCase("/kill @e[type=falling_block]")
+                || event.getMessage().equalsIgnoreCase("/kill @e[type=minecraft:falling_block]")) {
             event.getPlayer().sendMessage(Component.text("Espèce de fou, tu veux tuer tout le monde ?").color(NamedTextColor.DARK_RED).decorate(TextDecoration.BOLD));
             event.setCancelled(true);
         }
