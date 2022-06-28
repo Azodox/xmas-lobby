@@ -4,10 +4,7 @@ import fr.olten.xmas.achievement.Achievement;
 import fr.olten.xmas.carousel.Carousel;
 import fr.olten.xmas.carousel.Engine;
 import fr.olten.xmas.elementary.ElementaryShootingRange;
-import fr.olten.xmas.listener.FallDamageListener;
-import fr.olten.xmas.listener.IncomingPluginMessageListener;
-import fr.olten.xmas.listener.ProtectionListener;
-import fr.olten.xmas.listener.RestInPeaceListener;
+import fr.olten.xmas.listener.*;
 import fr.olten.xmas.listener.entity.EntityDamageByEntityListener;
 import fr.olten.xmas.listener.entity.EntityDeathListener;
 import fr.olten.xmas.listener.entity.EntityMoveListener;
@@ -57,7 +54,7 @@ public class Lobby extends JavaPlugin {
                 getConfig().getString("mongodb.host"),
                 getConfig().getInt("mongodb.port"));
 
-        this.getServer().getScheduler().runTaskTimer(this, new SpawnPortalParticle(this), 0, 1);
+        this.getServer().getScheduler().runTaskTimerAsynchronously(this, new SpawnPortalParticle(this), 0, 1);
 
         var DEFAULT_WORLD = Bukkit.getWorld("world");
         this.carousel = new Carousel(new Location(DEFAULT_WORLD, -483.0, 102.0, -461.0),
@@ -107,6 +104,7 @@ public class Lobby extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new EntityMoveListener(this), this);
         getServer().getPluginManager().registerEvents(new ProjectileLaunchedListener(this), this);
         getServer().getPluginManager().registerEvents(new PlayerCommandPreprocessListener(), this);
+        getServer().getPluginManager().registerEvents(new FoodLevelChangeListener(), this);
 
         getLogger().info("Enabled!");
     }
