@@ -6,6 +6,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerTakeLecternBookEvent;
 
 public class ProtectionListener implements Listener {
@@ -28,5 +29,10 @@ public class ProtectionListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onItemFrameChange(PlayerItemFrameChangeEvent event){
         event.setCancelled(!event.getPlayer().hasPermission("xmas.protect.itemframe"));
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onArmorStandDamaged(EntityDamageByEntityEvent event){
+        event.setCancelled(!event.getDamager().hasPermission("xmas.protect.armorstand"));
     }
 }
