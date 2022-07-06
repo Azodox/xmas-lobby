@@ -7,7 +7,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Location;
 import org.bukkit.block.Sign;
-import org.bukkit.craftbukkit.v1_18_R2.entity.CraftArmorStand;
+import org.bukkit.craftbukkit.v1_19_R1.entity.CraftArmorStand;
 import org.bukkit.entity.*;
 
 import java.util.*;
