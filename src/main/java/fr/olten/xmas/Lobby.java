@@ -25,7 +25,6 @@ import fr.olten.xmas.roulette.Roulette;
 import fr.olten.xmas.task.SpawnPortalParticle;
 import fr.olten.xmas.utils.Mongo;
 import net.valneas.account.AccountSystem;
-import net.valneas.account.rank.RankUnit;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Sign;
@@ -78,7 +77,7 @@ public class Lobby extends JavaPlugin {
         var provider = getServer().getServicesManager().getRegistration(AccountSystem.class);
         if(provider != null){
             var accountSystem = provider.getProvider();
-            accountSystem.getRankHandler().getAllRanksQuery().stream().map(rank -> (RankUnit) rank).forEach(TeamNameTagManager::init);
+            accountSystem.getRankHandler().getAllRanksQuery().stream().forEach(TeamNameTagManager::init);
             getServer().getPluginManager().registerEvents(new AsyncChatListener(accountSystem), this);
         }
         getServer().getOnlinePlayers().forEach(TeamNameTagManager::update);
