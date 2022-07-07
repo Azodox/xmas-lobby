@@ -77,7 +77,9 @@ public class Lobby extends JavaPlugin {
 
         var provider = getServer().getServicesManager().getRegistration(AccountSystem.class);
         if(provider != null){
-            provider.getProvider().getRankHandler().getAllRanksQuery().stream().map(rank -> (RankUnit) rank).forEach(TeamNameTagManager::init);
+            var accountSystem = provider.getProvider();
+            accountSystem.getRankHandler().getAllRanksQuery().stream().map(rank -> (RankUnit) rank).forEach(TeamNameTagManager::init);
+            getServer().getPluginManager().registerEvents(new AsyncChatListener(accountSystem), this);
         }
         getServer().getOnlinePlayers().forEach(TeamNameTagManager::update);
 
@@ -86,6 +88,7 @@ public class Lobby extends JavaPlugin {
         this.getServer().getMessenger().registerIncomingPluginChannel(this, "xmas:lobbysurvie", new IncomingPluginMessageListener(this));
         this.getServer().getMessenger().registerOutgoingPluginChannel(this, "xmas:lobbysurvie");
         this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+
 
         getServer().getPluginManager().registerEvents(new PlayerJoinListener(this), this);
         getServer().getPluginManager().registerEvents(new PlayerQuitListener(this), this);
