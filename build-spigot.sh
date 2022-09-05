@@ -66,8 +66,7 @@ wget https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifac
 echo "================================================================================"
 echo "Building latest spigot release"
 echo "================================================================================"
-java -jar BuildTools.jar
-
+java -jar BuildTools.jar --rev 1.18.2
 
 echo "================================================================================"
 echo "done"
